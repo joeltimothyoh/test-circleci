@@ -12,11 +12,15 @@ parameters:
 workflows:
   version: 2
   run_build:
-    when: << pipeline.parameters.var1 >>
+    when:
+      condition:
+      - matches: ['.+', "<< pipeline.parameters.var1 >>"]         
     jobs:
     - build
   run_send_notification:
-    when: << pipeline.parameters.var1 >>
+    when:
+      condition:
+      - matches: ['.+', "<< pipeline.parameters.var1 >>"]     
     jobs:
     - send-notification #:
         # requires:

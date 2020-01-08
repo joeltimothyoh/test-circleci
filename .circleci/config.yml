@@ -15,3 +15,8 @@ jobs:
           name: Print environment variables
           command: |
             printenv
+      - run:
+          name: debug
+          command: |
+            echo hi
+            exit 1

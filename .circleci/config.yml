@@ -15,9 +15,9 @@ workflows:
     when: << pipeline.parameters.var1 >>
     jobs:
     - build
-    - send-notification:
-        requires:
-        - build
+    - send-notification
+        # requires:
+        # - build
 jobs:
   build:
     machine:
@@ -38,30 +38,79 @@ jobs:
           name: Print environment variables
           command: |
             printenv
-      - run:
-          command: |
-            false
+
+      # - run:
+      #     name: Fail the job
+      #     command: |
+      #       false
+
       - run:
           when: always
-          name: Store cache
+          name: Store CIRCLE_BUILD_NUM
           command: |
-            echo "$CIRCLE_BUILD_NUM" > /tmp/CIRCLE_BUILD_NUM
-      - save_cache:
-          when: always
-          key: CIRCLE_BUILD_NUM-{{ .Environment.CIRCLE_WORKFLOW_ID }}
-          paths:
-          - /tmp/CIRCLE_BUILD_NUM
+            mkdir -p /tmp/workspace
+            echo "$CIRCLE_BUILD_NUM" > /tmp/workspace/CIRCLE_BUILD_NUM
+
+      # # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
+      # - persist_to_workspace:
+      #     # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
+      #     # taken to be the root directory of the workspace.
+      #     root: /tmp/workspace
+      #     # Must be relative path from root
+      #     paths:
+      #       - CIRCLE_BUILD_NUM
+
+      # - save_cache:
+      #     when: always
+      #     key: CIRCLE_BUILD_NUM-{{ .Environment.CIRCLE_WORKFLOW_ID }}
+      #     paths:
+      #     - /tmp/CIRCLE_BUILD_NUM
   send-notification:
     machine:
       image: ubuntu-1604:201903-01
+      docker_layer_caching: false
     steps:
-    - restore_cache:
-        keys:
-        - CIRCLE_BUILD_NUM-{{ .Environment.CIRCLE_WORKFLOW_ID }}
+    # - attach_workspace:
+    #     # Must be absolute path or relative path from working_directory
+    #     at: /tmp/workspace
+
+    # - restore_cache:
+    #     keys:
+    #     - CIRCLE_BUILD_NUM-{{ .Environment.CIRCLE_WORKFLOW_ID }}
+
     - run:
         name: Send notification
         command: |
-          cat /tmp/CIRCLE_BUILD_NUM
+          # Keep checking status of my workflow's sibling job. Once it's completed, send a notification.
+          SLEEP=5
+          SLEPT=0
+          SLEEP_THRESHOLD=7200
+          while true; do
+              JOB=$( curl -s -H "Circle-Token: $CIRCLE_API_TOKEN" -H 'Accept: application/json' -X GET "https://circleci.com/api/v2/workflow/$CIRCLE_WORKFLOW_ID/job" | jq -r '.items[] | select(.name = "build")' )
+              echo "JOB: $JOB"
+              if [ -z "$JOB" ]; then
+                  echo "No job name matching 'build'"
+                  exit 1
+              fi
+
+              JOB_STATUS=$( echo -n "$JOB" | jq -r '.status' )
+              if [ "$JOB_STATUS" == "success" ] || [ "$JOB_STATUS" == "failed" ] || [ "$JOB_STATUS" == "cancelled" ]; then
+                  echo "Sending notification"
+                  JOB_NUMBER=$( echo -n "$JOB" | jq -r '.job_number' )
+                  BODY="{ \"payload\": { \"build_num\": $JOB_NUMBER } }"
+                  echo "BODY: $BODY"
+                  curl -s -X POST -H 'Content-Type: application/json' --data "$BODY" "$NOTIFICATION_WEBHOOK" && exit 0 || exit 1
+              else
+                  SLEPT=$(($SLEPT+$SLEEP))
+                  if [ "$SLEPT" -ge "$SLEEP_THRESHOLD" ]; then
+                      echo "Job has been running too long"
+                      exit 1
+                  fi
+                  echo "Sleeping for $SLEEP seconds before checking again"
+                  sleep 5
+              fi
+          done
+
 # notify:
 #   webhooks:
 #   - url: https://outlook.office.com/webhook/78418f17-b295-40cc-ae37-bfc91463c01e@4e4f53c4-6f09-4818-9c77-020eeb613480/CircleCI/4a2bb892c6014937ba79528601766b78/51073360-bb16-430e-b8d7-e5f40375df1d

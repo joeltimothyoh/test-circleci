@@ -19,4 +19,4 @@ jobs:
           name: debug
           command: |
             echo hi
-            exit 1
+            exit 0

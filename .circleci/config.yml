@@ -9,7 +9,7 @@ parameters:
   var3:
     type: integer
     default: ''
-  var2:
+  var4:
     type: boolean
     default: ''
 workflows:

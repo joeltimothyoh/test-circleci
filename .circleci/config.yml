@@ -7,10 +7,10 @@ parameters:
     type: string
     default: ''
   var3:
-    type: integer
+    type: string
     default: ''
   var4:
-    type: boolean
+    type: string
     default: ''
 workflows:
   version: 2

@@ -19,12 +19,43 @@ workflows:
     jobs:
     - build-docker1
     - build-machine1
+    - build-machine2
 orbs:
   slack: circleci/slack@3.4.2
 jobs:
-  build-docker1:
-    docker:
-      - image: alpine:3.10
+  # build-docker1:
+  #   docker:
+  #     - image: alpine:3.10
+  #   environment:
+  #     var1: << pipeline.parameters.var1 >>
+  #     var2: << pipeline.parameters.var2 >>
+  #     var3: << pipeline.parameters.var3 >>
+  #     var4: << pipeline.parameters.var4 >>
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: system info
+  #         command: |
+  #           echo hello
+  #           echo world
+  #           echo goodbye
+  #     - run:
+  #         name: Print environment variables
+  #         command: |
+  #           printenv
+  #     - run:
+  #         name: debug
+  #         command: |
+  #           echo hi
+  #           exit 0
+  #           echo bye
+  #     - slack/status:
+  #         fail_only: false
+  #         webhook: ${SLACK_WEBHOOK}
+  build-machine1:
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: false
     environment:
       var1: << pipeline.parameters.var1 >>
       var2: << pipeline.parameters.var2 >>
@@ -51,7 +82,7 @@ jobs:
       - slack/status:
           fail_only: false
           webhook: ${SLACK_WEBHOOK}
-  build-machine1:
+  build-machine2:
     machine:
       image: ubuntu-1604:201903-01
       docker_layer_caching: false

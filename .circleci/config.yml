@@ -25,7 +25,7 @@ orbs:
 jobs:
   build-docker1:
     docker:
-      - image: alpine:3.10
+      - image: ubuntu:latest
     environment:
       var1: << pipeline.parameters.var1 >>
       var2: << pipeline.parameters.var2 >>

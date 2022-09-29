@@ -113,6 +113,9 @@ jobs:
             echo hi
             exit 0
             echo bye
+      - run:
+          command: |
+            echo dummy
       - slack/status:
           fail_only: false
           webhook: ${SLACK_WEBHOOK}

@@ -79,6 +79,10 @@ jobs:
             echo hi
             exit 0
             echo bye
+      - run:
+          name: tools
+          command: |
+            jq --help
       - slack/status:
           fail_only: false
           webhook: ${SLACK_WEBHOOK}

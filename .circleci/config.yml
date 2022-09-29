@@ -114,6 +114,7 @@ jobs:
             exit 0
             echo bye
       - run:
+          name: script
           command: |
             echo dummy
             echo dummy2

@@ -116,6 +116,8 @@ jobs:
       - run:
           command: |
             echo dummy
+            echo dummy2
+            echo dummy3
       - slack/status:
           fail_only: false
           webhook: ${SLACK_WEBHOOK}

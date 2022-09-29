@@ -25,7 +25,7 @@ orbs:
 jobs:
   build-docker1:
     docker:
-      - image: ubuntu:latest
+      - image: joeltimothyoh/alpine:git-ssh
     environment:
       var1: << pipeline.parameters.var1 >>
       var2: << pipeline.parameters.var2 >>

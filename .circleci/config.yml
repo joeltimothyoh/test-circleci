@@ -15,7 +15,7 @@ parameters:
 workflows:
   version: 2
   run_build:
-    when: << pipeline.parameters.var1 >>
+    # when: << pipeline.parameters.var1 >>
     jobs:
     - build-docker1
     - build-machine1

@@ -54,7 +54,7 @@ jobs:
           webhook: ${SLACK_WEBHOOK}
   build-machine1:
     machine:
-      image: ubuntu-1604:201903-01
+      image: ubuntu:current
       docker_layer_caching: false
     environment:
       var1: << pipeline.parameters.var1 >>

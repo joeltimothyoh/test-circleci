@@ -128,6 +128,10 @@ jobs:
             echo "$CIRCLE_PROJECT_REPONAME"
             echo "$CIRCLE_BRANCH"
       - run:
+          name: Debug shell variables with .sh file
+          command: |
+            ./debug-shell-variables.sh
+      - run:
           name: tools
           command: |
             jq --help

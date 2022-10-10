@@ -116,10 +116,10 @@ jobs:
       - run:
           name: Debug circleci env.* variables
           command: |
-            echo env.JOB_NUMBER
-            echo env.CIRCLE_PROJECT_USERNAME
-            echo env.CIRCLE_PROJECT_REPONAME
-            echo env.CIRCLE_BRANCH
+            env.JOB_NUMBER
+            env.CIRCLE_PROJECT_USERNAME
+            env.CIRCLE_PROJECT_REPONAME
+            env.CIRCLE_BRANCH
       - run:
           name: Debug circleci env.* variables interpolation
           command: |

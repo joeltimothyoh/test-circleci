@@ -1,3 +1,5 @@
+#!/bin/sh
+
 BODY=$( echo '{}' | jq '
 {
     "build_num": "$CIRCLE_BUILD_NUM",

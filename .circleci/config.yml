@@ -110,6 +110,10 @@ jobs:
             ' )
             echo "BODY: $BODY"
       - run:
+          name: Debug circleci env.* variables interpolation with .sh file
+          command: |
+            ./debug-circleci-env-variables.sh
+      - run:
           name: Debug circleci env.* variables
           command: |
             echo env.JOB_NUMBER

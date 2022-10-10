@@ -74,11 +74,19 @@ jobs:
           command: |
             printenv
       - run:
-          name: debug
+          name: Debug circleci env.* variables
           command: |
-            echo hi
-            exit 0
-            echo bye
+            echo env.JOB_NUMBER
+            echo env.CIRCLE_PROJECT_USERNAME
+            echo env.CIRCLE_PROJECT_REPONAME
+            echo env.CIRCLE_BRANCH
+      - run:
+          name: Debug shell variables
+          command: |
+            echo "$JOB_NUMBER"
+            echo "$CIRCLE_PROJECT_USERNAME"
+            echo "$CIRCLE_PROJECT_REPONAME"
+            echo "$CIRCLE_BRANCH"
       - run:
           name: tools
           command: |

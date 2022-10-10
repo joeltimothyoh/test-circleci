@@ -78,7 +78,7 @@ jobs:
           command: |
             BODY=$( echo '{}' | jq '
             {
-                "build_num": env.JOB_NUMBER,
+                "build_num": env.CIRCLE_BUILD_NUM,
                 "username": env.CIRCLE_PROJECT_USERNAME,
                 "reponame": env.CIRCLE_PROJECT_REPONAME,
                 "branch": env.CIRCLE_BRANCH,
@@ -91,7 +91,6 @@ jobs:
             }
             ' )
             echo "BODY: $BODY"
-
       - run:
           name: Debug circleci env.* variables
           command: |

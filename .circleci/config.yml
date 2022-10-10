@@ -123,7 +123,7 @@ jobs:
       - run:
           name: Debug shell variables
           command: |
-            echo "$JOB_NUMBER"
+            echo "$CIRCLE_BUILD_NUM"
             echo "$CIRCLE_PROJECT_USERNAME"
             echo "$CIRCLE_PROJECT_REPONAME"
             echo "$CIRCLE_BRANCH"
